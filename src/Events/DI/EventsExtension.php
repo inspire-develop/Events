@@ -34,9 +34,13 @@ use Nette\PhpGenerator\ClassType as ClassTypeGenerator;
 use Nette\PhpGenerator\Helpers as GeneratorHelpers;
 use Nette\PhpGenerator\PhpLiteral;
 use Nette\Utils\Validators;
+use ReflectionIntersectionType;
+use ReflectionNamedType;
 use ReflectionProperty;
 use Symfony\Component\EventDispatcher\Event as SymfonyEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 class EventsExtension extends \Nette\DI\CompilerExtension
 {
@@ -404,6 +408,32 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 
 			if (self::propertyHasAnnotation($property, 'persistent') || self::propertyHasAnnotation($property, 'inject')) { // definitely not an event
 				continue;
+			}
+
+			if ($property->hasType()) {
+				// we need to check that type can accomodate Kdyby\Events\Event
+				$type = $property->getType();
+
+				$allowedTypes = [];
+
+				if ($type instanceof \ReflectionUnionType) {
+					/** @var ReflectionNamedType|ReflectionIntersectionType $unionType */
+					foreach ($type->getTypes() as $unionType) {
+						if ($unionType instanceof ReflectionNamedType) {
+							$allowedTypes[] = $unionType->getName();
+						}
+					}
+				} elseif ($type instanceof ReflectionNamedType) {
+					$allowedTypes = [$type->getName()];
+				}
+
+				if (false === \in_array(Event::class, $allowedTypes, true)) {
+					if (\str_starts_with($class->getName(), 'Inspire\\')) {
+						Debugger::log(\sprintf('Class "%s" has public property "%s", which does not allow Kdyby\\Events\\Event as its value.', $class->getName(), $property->getName()), ILogger::ERROR);
+					}
+					// skip, b/c property does not support Event
+					continue;
+				}
 			}
 
 			$dispatchAnnotation = self::propertyHasAnnotation($property, 'globalDispatchFirst');

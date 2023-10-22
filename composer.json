@@ -2,9 +2,16 @@
 	"name": "inspirecz/events",
 	"type": "library",
 	"description": "Events for Nette Framework",
-	"keywords": ["nette", "kdyby"],
+	"keywords": [
+		"nette",
+		"kdyby"
+	],
 	"homepage": "http://kdyby.org",
-	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"license": [
+		"BSD-3-Clause",
+		"GPL-2.0",
+		"GPL-3.0"
+	],
 	"authors": [
 		{
 			"name": "Filip Procházka",
@@ -17,7 +24,7 @@
 		"issues": "https://github.com/kdyby/events/issues"
 	},
 	"require": {
-		"php": "^7.4 | ^8.0",
+		"php": "8.2.*",
 		"nette/di": "^3.0",
 		"nette/utils": "^3.0 || ^4.0"
 	},
@@ -53,9 +60,10 @@
 			"tests/KdybyTests"
 		]
 	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "3.2-dev"
+	"config": {
+        "sort-packages": true,
+		"platform": {
+			"php": "8.2.11"
 		}
 	}
 }
