@@ -415,6 +415,11 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 				continue;
 			}
 
+			// skip properties of classes outside of Inspire namespace
+			if (false === \str_starts_with($property->getDeclaringClass()->getName(), 'Inspire\\')) {
+				continue;
+			}
+
 			if ($property->hasType()) {
 				// we need to check that type can accomodate Kdyby\Events\Event
 				$type = $property->getType();
