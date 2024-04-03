@@ -415,11 +415,6 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 				continue;
 			}
 
-			// skip properties of classes outside of Inspire namespace
-			if (false === \str_starts_with($property->getDeclaringClass()->getName(), 'Inspire\\')) {
-				continue;
-			}
-
 			if ($property->hasType()) {
 				// we need to check that type can accomodate Kdyby\Events\Event
 				$type = $property->getType();
@@ -438,8 +433,10 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 				}
 
 				if (false === \in_array(Event::class, $allowedTypes, true)) {
-					if (\str_starts_with($class->getName(), 'Inspire\\')) {
-						Debugger::log(\sprintf('Class "%s" has public property "%s", which does not allow Kdyby\\Events\\Event as its value.', $class->getName(), $property->getName()), ILogger::ERROR);
+					$declaringClass = $property->getDeclaringClass()->getName();
+
+					if (\str_starts_with($declaringClass, 'Inspire\\')) {
+						Debugger::log(\sprintf('Class "%s" has public property "%s", which does not allow Kdyby\\Events\\Event as its value.', $class->getName(), $declaringClass . '::$' . $property->getName()), ILogger::ERROR);
 					}
 					// skip, b/c property does not support Event
 					continue;
