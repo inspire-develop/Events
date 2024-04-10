@@ -27,6 +27,6 @@ namespace Doctrine\Common {
 	}
 
 	interface EventSubscriber {
-		function getSubscribedEvents();
+		public function getSubscribedEvents(): array;
 	}
 }
