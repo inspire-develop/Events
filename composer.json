@@ -3,7 +3,7 @@
 	"type": "library",
 	"description": "Events for Nette Framework",
 	"keywords": [
-		"nette",
+		"nette"
 	],
 	"license": [
 		"BSD-3-Clause",
