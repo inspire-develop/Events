@@ -10,6 +10,7 @@
 
 namespace Kdyby\Events\DI;
 
+use Closure;
 use Doctrine\Common\EventSubscriber;
 use Kdyby\Events\Diagnostics\Panel;
 use Kdyby\Events\Event;
@@ -311,7 +312,7 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 						throw new \Nette\Utils\AssertionException(sprintf('Event listener %s::%s() is not implemented.', $defClass, $method));
 					}
 
-				} elseif (is_string($eventName)) { // [EventName => ???, ...]
+				} elseif (is_string($eventName) && false === $params instanceof Closure) { // [EventName => ???, ...]
 					$eventNames[] = ltrim($eventName, '\\');
 
 					if (is_string($params)) { // [EventName => method, ...]

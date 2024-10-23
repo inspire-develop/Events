@@ -4,9 +4,7 @@
 	"description": "Events for Nette Framework",
 	"keywords": [
 		"nette",
-		"kdyby"
 	],
-	"homepage": "http://kdyby.org",
 	"license": [
 		"BSD-3-Clause",
 		"GPL-2.0",
@@ -19,10 +17,6 @@
 			"email": "filip@prochazka.su"
 		}
 	],
-	"support": {
-		"email": "filip@prochazka.su",
-		"issues": "https://github.com/kdyby/events/issues"
-	},
 	"require": {
 		"php": "8.3.*",
 		"nette/di": "^3.0",

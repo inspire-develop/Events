@@ -24,16 +24,19 @@ extensions:
 Nette Events
 ------------
 
-By extending `Nette\Object`, you're obtaining a very simple event system. Every property prefixed by "on" is an event.
+By using trait `Nette\SmartObject`, you're obtaining a very simple event system. Every property prefixed by "on" is an event.
 
 ```php
 namespace App;
 
 use Nette;
+use Nette\SmartObject;
 
-class OrderProcess extends Nette\Object
+class OrderProcess
 {
-	public $onSuccess = array();
+	use SmartObject;
+
+	public $onSuccess = [];
 
 	private $orders;
 
@@ -84,7 +87,7 @@ class FooListener extends Nette\Object implements Kdyby\Events\Subscriber
 {
 	public function getSubscribedEvents()
 	{
-		return array('App\OrderProcess::onSuccess');
+		return ['App\OrderProcess::onSuccess'];
 	}
 
 	public function onSuccess(OrderProcess $process)
@@ -191,10 +194,10 @@ class FooListener extends Nette\Object implements Kdyby\Events\Subscriber
 {
 	public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'App\OrderProcess::onSuccess' => 'orderSuccess',
-			'App\StoreProcess::onSuccess' => 'storeSuccess'
-		);
+			'App\StoreProcess::onSuccess' => $this->storeSuccess(...), // first class callable syntax, PHP 8.1+
+		];
 	}
 
 	public function orderSuccess(OrderProcess $process)
