@@ -285,9 +285,9 @@ class EventManager extends \Doctrine\Common\EventManager
 				$this->addEventListener($params, $subscriber);
 
 			} elseif (is_string($eventName)) { // [EventName => ???, ...]
-                if ($params instanceof Closure) {
-                    $this->addEventListener($eventName, $params);
-                } elseif (is_string($params)) { // [EventName => method, ...]
+				if ($params instanceof Closure) {
+					$this->addEventListener($eventName, $params);
+				} elseif (is_string($params)) { // [EventName => method, ...]
 					$this->addEventListener($eventName, [$subscriber, $params]);
 
 				} elseif (is_string($params[0])) { // [EventName => [method, priority], ...]
