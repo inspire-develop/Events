@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": "8.3.*",
+        "php": "8.5.*",
         "nette/di": "^3.0",
         "nette/utils": "^3.0 || ^4.0"
     },
@@ -33,11 +33,11 @@
         "nette/caching": "^3.0",
         "nette/security": "^3.0",
         "nette/http": "^3.0",
-        "tracy/tracy": "^2.5",
+        "inspire/tracy": "^2.11",
         "symfony/event-dispatcher": "^3.0 || ^4.0",
         "nette/tester": "^2.4",
-        "phpstan/phpstan": "^0.12.88",
-        "jakub-onderka/php-parallel-lint": "^1.0"
+        "phpstan/phpstan": "^2",
+        "php-parallel-lint/php-parallel-lint": "^1"
     },
     "autoload": {
         "psr-4": {
@@ -62,7 +62,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.3.0"
+            "php": "8.5.0"
         }
     },
     "conflict": {
