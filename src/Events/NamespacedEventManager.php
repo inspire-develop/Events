@@ -40,7 +40,7 @@ class NamespacedEventManager extends \Kdyby\Events\EventManager
 	/**
 	 * {@inheritDoc}
 	 */
-	public function dispatchEvent($eventName, DoctrineEventArgs $eventArgs = NULL)
+	public function dispatchEvent($eventName, ?DoctrineEventArgs $eventArgs = NULL)
 	{
 		[$ns, $event] = Event::parseName($eventName);
 
