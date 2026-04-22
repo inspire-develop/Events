@@ -33,11 +33,11 @@
         "nette/caching": "^3.0",
         "nette/security": "^3.0",
         "nette/http": "^3.0",
-        "tracy/tracy": "^2.5",
+        "inspire/tracy": "^2.10",
         "symfony/event-dispatcher": "^3.0 || ^4.0",
         "nette/tester": "^2.4",
         "phpstan/phpstan": "^0.12.88",
-        "jakub-onderka/php-parallel-lint": "^1.0"
+        "php-parallel-lint/php-parallel-lint": "^1"
     },
     "autoload": {
         "psr-4": {

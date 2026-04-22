@@ -122,6 +122,11 @@ class Event implements \ArrayAccess, \IteratorAggregate, \Countable
 		}
 	}
 
+	public function wrapToArray(): array
+	{
+		return [$this];
+	}
+
 	/**
 	 * @param callable $listener
 	 * @return static

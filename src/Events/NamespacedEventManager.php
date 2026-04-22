@@ -40,7 +40,7 @@ class NamespacedEventManager extends \Kdyby\Events\EventManager
 	/**
 	 * {@inheritDoc}
 	 */
-	public function dispatchEvent($eventName, DoctrineEventArgs $eventArgs = NULL)
+	public function dispatchEvent($eventName, ?DoctrineEventArgs $eventArgs = NULL)
 	{
 		[$ns, $event] = Event::parseName($eventName);
 
@@ -145,7 +145,7 @@ class NamespacedEventManager extends \Kdyby\Events\EventManager
 	/**
 	 * {@inheritDoc}
 	 */
-	public function createEvent($name, $defaults = [], $argsClass = NULL, $globalDispatchFirst = FALSE)
+	public function createEvent($name, $defaults = [], $argsClass = NULL, $globalDispatchFirst = FALSE): Event
 	{
 		return $this->evm->createEvent($this->namespace . $name, $defaults, $argsClass, $globalDispatchFirst);
 	}

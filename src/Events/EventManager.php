@@ -75,7 +75,7 @@ class EventManager extends \Doctrine\Common\EventManager
 	 * @param string $eventName The name of the event to dispatch. The name of the event is the name of the method that is invoked on listeners.
 	 * @param \Doctrine\Common\EventArgs $eventArgs The event arguments to pass to the event handlers/listeners. If not supplied, the single empty EventArgs instance is used
 	 */
-	public function dispatchEvent($eventName, DoctrineEventArgs $eventArgs = NULL)
+	public function dispatchEvent($eventName, ?DoctrineEventArgs $eventArgs = NULL)
 	{
 		if ($this->panel) {
 			$this->panel->eventDispatch($eventName, $eventArgs);
@@ -315,9 +315,8 @@ class EventManager extends \Doctrine\Common\EventManager
 	 * @param array|\Traversable|null $defaults
 	 * @param string $argsClass
 	 * @param bool $globalDispatchFirst
-	 * @return \Kdyby\Events\Event
 	 */
-	public function createEvent($name, $defaults = [], $argsClass = NULL, $globalDispatchFirst = FALSE)
+	public function createEvent($name, $defaults = [], $argsClass = NULL, $globalDispatchFirst = FALSE): Event
 	{
 		$event = new Event($name, $defaults, $argsClass);
 		$event->globalDispatchFirst = $globalDispatchFirst;
