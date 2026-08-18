@@ -13,7 +13,7 @@ class PriorityMethodAliasListenerMock implements \Kdyby\Events\Subscriber
 	/**
 	 * @return array
 	 */
-	public function getSubscribedEvents()
+	public function getSubscribedEvents(): array
 	{
 		return [
 			'Article::onDiscard' => ['customMethod', 10],

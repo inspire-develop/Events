@@ -63,9 +63,9 @@ class EventTest extends \Tester\TestCase
 		$foo->onBar->dispatch([10]);
 
 		Assert::count(2, $calls);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $calls[0][0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $calls[0][0]);
 		Assert::same([10], $calls[0][1]);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $calls[1][0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $calls[1][0]);
 		Assert::same([10], $calls[1][1]);
 	}
 
@@ -75,9 +75,9 @@ class EventTest extends \Tester\TestCase
 		$foo->onBar(15);
 
 		Assert::count(2, $calls);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $calls[0][0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $calls[0][0]);
 		Assert::same([15], $calls[0][1]);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $calls[1][0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $calls[1][0]);
 		Assert::same([15], $calls[1][1]);
 	}
 
@@ -123,7 +123,7 @@ class EventTest extends \Tester\TestCase
 		$foo->onMagic($foo, 2);
 
 		Assert::count(1, $calls);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $calls[0][0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $calls[0][0]);
 		Assert::same([$foo, 2], $calls[0][1]);
 
 		Assert::count(1, $listener->calls);
@@ -140,7 +140,7 @@ class EventTest extends \Tester\TestCase
 		$foo->onMagic->dispatch([$foo, 3]);
 
 		Assert::count(1, $calls);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $calls[0][0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $calls[0][0]);
 		Assert::same([$foo, 3], $calls[0][1]);
 
 		Assert::count(1, $listener->calls);
@@ -157,7 +157,7 @@ class EventTest extends \Tester\TestCase
 		$foo->onStartup($foo, 4);
 
 		Assert::count(1, $calls);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $calls[0][0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $calls[0][0]);
 		Assert::same([$foo, 4], $calls[0][1]);
 		Assert::same(1, count($listener->calls));
 
@@ -189,7 +189,7 @@ class EventTest extends \Tester\TestCase
 		Assert::count(2, $listener->calls);
 		Assert::same(EventListenerMock::class . '::onFoo', $listener->calls[0][0]);
 		Assert::same([$args], $listener->calls[0][1]);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $listener->calls[1]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $listener->calls[1]);
 	}
 
 	public function testDispatchOrderGlobalLast()
@@ -210,7 +210,7 @@ class EventTest extends \Tester\TestCase
 		$event->dispatch($args);
 
 		Assert::count(2, $listener->calls);
-		Assert::match('KdybyTests\Events\%A?%{closure}', $listener->calls[0]);
+		Assert::match('{closure:KdybyTests\Events\%A%', $listener->calls[0]);
 		Assert::same(EventListenerMock::class . '::onFoo', $listener->calls[1][0]);
 		Assert::same([$args], $listener->calls[1][1]);
 	}

@@ -315,9 +315,8 @@ class EventManager extends \Doctrine\Common\EventManager
 	 * @param array|\Traversable|null $defaults
 	 * @param string $argsClass
 	 * @param bool $globalDispatchFirst
-	 * @return \Kdyby\Events\Event
 	 */
-	public function createEvent($name, $defaults = [], $argsClass = NULL, $globalDispatchFirst = FALSE)
+	public function createEvent($name, $defaults = [], $argsClass = NULL, $globalDispatchFirst = FALSE): Event
 	{
 		$event = new Event($name, $defaults, $argsClass);
 		$event->globalDispatchFirst = $globalDispatchFirst;

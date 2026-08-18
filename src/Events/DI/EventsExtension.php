@@ -414,6 +414,8 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 				continue;
 			}
 
+			$arrayType = false;
+
 			if ($property->hasType()) {
 				// we need to check that type can accomodate Kdyby\Events\Event
 				$type = $property->getType();
@@ -431,7 +433,9 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 					$allowedTypes = [$type->getName()];
 				}
 
-				if (false === \in_array(Event::class, $allowedTypes, true)) {
+				if ($allowedTypes === ['array']) {
+					$arrayType = true;
+				} elseif (false === \in_array(Event::class, $allowedTypes, true)) {
 					$declaringClass = $property->getDeclaringClass()->getName();
 
 					if (\str_starts_with($declaringClass, 'Inspire\\')) {
@@ -443,13 +447,16 @@ class EventsExtension extends \Nette\DI\CompilerExtension
 			}
 
 			$dispatchAnnotation = self::propertyHasAnnotation($property, 'globalDispatchFirst');
+			$createEventStatement = new Statement($this->prefix('@manager') . '::createEvent', [
+				[$class->getName(), $name],
+				new PhpLiteral('$service->' . $name),
+				NULL,
+				$dispatchAnnotation ?? $this->loadedConfig['globalDispatchFirst'],
+			]);
 			$def->addSetup('$' . $name, [
-				new Statement($this->prefix('@manager') . '::createEvent', [
-					[$class->getName(), $name],
-					new PhpLiteral('$service->' . $name),
-					NULL,
-					$dispatchAnnotation ?? $this->loadedConfig['globalDispatchFirst'],
-				]),
+				$arrayType
+					? new Statement([$createEventStatement, 'wrapToArray'], [])
+					: $createEventStatement,
 			]);
 		}
 	}
