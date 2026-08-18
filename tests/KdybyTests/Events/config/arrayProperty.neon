@@ -1,0 +1,7 @@
+events:
+	optimize: no
+	validate: no
+	autowire: yes
+
+services:
+	arrayPropertyMock: KdybyTests\Events\ArrayPropertyMock

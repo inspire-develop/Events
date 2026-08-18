@@ -14,6 +14,7 @@ use Kdyby\Events\EventManager;
 use Kdyby\Events\IExceptionHandler;
 use Nette\Application\Application;
 use Nette\Configurator;
+use Nette\Utils\Arrays;
 use Nette\Security\User;
 use ReflectionProperty;
 use Tester\Assert;
@@ -106,26 +107,37 @@ class ExtensionTest extends \Tester\TestCase
 		}, \Nette\Utils\AssertionException::class, 'Event listener KdybyTests\Events\SecondInvalidListenerMock::onBar() is not implemented.');
 	}
 
+	/**
+	 * Properties that accept an Event hold it directly; strictly array-typed ones (Nette 3.2+ lifecycle
+	 * hooks) hold it wrapped in an array. Both are a bound event.
+	 *
+	 * @param \Kdyby\Events\Event|array $property
+	 * @return \Kdyby\Events\Event
+	 */
+	private function assertBoundEvent($property, $expectedName)
+	{
+		if (is_array($property)) {
+			Assert::count(1, $property);
+			$property = reset($property);
+		}
+
+		Assert::type(Event::class, $property);
+		Assert::same($expectedName, $property->getName());
+
+		return $property;
+	}
+
 	public function testAutowire()
 	{
 		$container = $this->createContainer('autowire');
 
 		$app = $container->getService('application');
 		/** @var \Nette\Application\Application $app */
-		Assert::true($app->onStartup instanceof Event);
-		Assert::same(Application::class . '::onStartup', $app->onStartup->getName());
-
-		Assert::true($app->onRequest instanceof Event);
-		Assert::same(Application::class . '::onRequest', $app->onRequest->getName());
-
-		Assert::true($app->onResponse instanceof Event);
-		Assert::same(Application::class . '::onResponse', $app->onResponse->getName());
-
-		Assert::true($app->onError instanceof Event);
-		Assert::same(Application::class . '::onError', $app->onError->getName());
-
-		Assert::true($app->onShutdown instanceof Event);
-		Assert::same(Application::class . '::onShutdown', $app->onShutdown->getName());
+		$this->assertBoundEvent($app->onStartup, Application::class . '::onStartup');
+		$this->assertBoundEvent($app->onRequest, Application::class . '::onRequest');
+		$this->assertBoundEvent($app->onResponse, Application::class . '::onResponse');
+		$this->assertBoundEvent($app->onError, Application::class . '::onError');
+		$this->assertBoundEvent($app->onShutdown, Application::class . '::onShutdown');
 
 		// not all properties are affected
 		Assert::true(is_bool($app->catchExceptions));
@@ -133,11 +145,32 @@ class ExtensionTest extends \Tester\TestCase
 
 		$user = $container->getService('user');
 		/** @var \Nette\Security\User $user */
-		Assert::true($user->onLoggedIn instanceof Event);
-		Assert::same(User::class . '::onLoggedIn', $user->onLoggedIn->getName());
+		$this->assertBoundEvent($user->onLoggedIn, User::class . '::onLoggedIn');
+		$this->assertBoundEvent($user->onLoggedOut, User::class . '::onLoggedOut');
+	}
 
-		Assert::true($user->onLoggedOut instanceof Event);
-		Assert::same(User::class . '::onLoggedOut', $user->onLoggedOut->getName());
+	public function testAutowireArrayTypedProperty()
+	{
+		$container = $this->createContainer('arrayProperty');
+
+		/** @var \KdybyTests\Events\ArrayPropertyMock $mock */
+		$mock = $container->getService('arrayPropertyMock');
+
+		// the property is strictly typed as array, so it must stay an array holding the invokable Event
+		Assert::true(is_array($mock->onArrayOnly));
+		Assert::count(1, $mock->onArrayOnly);
+		Assert::type(Event::class, $mock->onArrayOnly[0]);
+		Assert::same(ArrayPropertyMock::class . '::onArrayOnly', $mock->onArrayOnly[0]->getName());
+
+		// a property that accepts Event is still bound directly
+		Assert::type(Event::class, $mock->onUnion);
+		Assert::same(ArrayPropertyMock::class . '::onUnion', $mock->onUnion->getName());
+
+		// listeners registered before the binding must survive it and still be invoked
+		$log = new \stdClass();
+		$log->preRegisteredCalled = FALSE;
+		Arrays::invoke($mock->onArrayOnly, $log);
+		Assert::true($log->preRegisteredCalled);
 	}
 
 	public function testInherited()
@@ -262,7 +295,6 @@ class ExtensionTest extends \Tester\TestCase
 
 		// getter not needed, so hack it via reflection
 		$rp = new ReflectionProperty(EventManager::class, 'exceptionHandler');
-		$rp->setAccessible(TRUE);
 		$handler = $rp->getValue($manager);
 
 		Assert::true($handler instanceof IExceptionHandler);
