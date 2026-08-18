@@ -13,7 +13,7 @@ class InheritSubscriber implements \Kdyby\Events\Subscriber
 	/**
 	 * @return array
 	 */
-	public function getSubscribedEvents()
+	public function getSubscribedEvents(): array
 	{
 		return [
 			LeafClass::class . '::onCreate',

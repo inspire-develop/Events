@@ -8,6 +8,6 @@ interface FooMockAccessor
 	/**
 	 * @return \KdybyTests\Events\FooMock
 	 */
-	public function get();
+	public function get(): FooMock;
 
 }

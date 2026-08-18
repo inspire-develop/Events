@@ -13,7 +13,7 @@ class MagicEventListenerMock implements \Kdyby\Events\CallableSubscriber
 	/**
 	 * @return array
 	 */
-	public function getSubscribedEvents()
+	public function getSubscribedEvents(): array
 	{
 		return [
 			'onQuux',

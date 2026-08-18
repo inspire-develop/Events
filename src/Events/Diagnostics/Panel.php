@@ -99,7 +99,7 @@ class Panel implements \Tracy\IBarPanel
 		$event->setPanel($this);
 	}
 
-	public function eventDispatch($eventName, EventArgs $args = NULL)
+	public function eventDispatch($eventName, ?EventArgs $args = NULL)
 	{
 		if (!$this->renderPanel) {
 			return;
@@ -121,7 +121,7 @@ class Panel implements \Tracy\IBarPanel
 		}
 	}
 
-	public function eventDispatched($eventName, EventArgs $args = NULL)
+	public function eventDispatched($eventName, ?EventArgs $args = NULL)
 	{
 		if (!$this->renderPanel || (is_array($this->renderPanel) && !$this->renderPanel['dispatchTree'])) {
 			return;
@@ -413,7 +413,6 @@ class Panel implements \Tracy\IBarPanel
 		}
 
 		$refl = new ReflectionProperty(DIContainer::class, 'types');
-		$refl->setAccessible(TRUE);
 		$types = $refl->getValue($this->sl);
 
 		$this->registeredClasses = [];
